@@ -119,14 +119,17 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="Labyrinth.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Viev.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Labyrinth.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="Viev.cpp" />
   </ItemGroup>
