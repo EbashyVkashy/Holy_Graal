@@ -13,6 +13,9 @@ public:
 	void WrongCommand();
 	void WrongNameDoor();
 	void NoDoor();
+	void WrongItemName();
+	void ChestLift();
+	void NoItem();
 	void WritePosition(const Model &);
 	Viev();
 	~Viev();

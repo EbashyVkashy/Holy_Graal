@@ -46,6 +46,21 @@ void Viev::NoDoor()
 	std::cout << "There is no door!" << std::endl;
 }
 
+void Viev::WrongItemName()
+{
+	std::cout << "Wrong item name!" << std::endl;
+}
+
+void Viev::ChestLift()
+{
+	std::cout << "Chest too heavy, cant carry it!" << std::endl;
+}
+
+void Viev::NoItem()
+{
+	std::cout << "There is no such item!" << std::endl;
+}
+
 void Viev::WritePosition(const Model &mod)
 {
 	std::cout << "You are in the room [" << mod.player.posx << "." << mod.player.posy << "]. There are [";

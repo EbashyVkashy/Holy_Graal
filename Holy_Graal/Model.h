@@ -11,6 +11,7 @@ public:
 	bool CheckWidth(int x);
 	bool CheckHeight(int y);
 	int Move(std::string dir);
+	int GetItem(std::string itemname);
 	Model();
 	~Model();
 };

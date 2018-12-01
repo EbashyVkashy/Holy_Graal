@@ -13,18 +13,26 @@ void Room::AddToStash(Item &item)
 	stash.push_back(item);
 }
 
-bool Room::RemoveFromStash(Item & item)
+int Room::CheckStash(int checkid)
 {
-	int quantity = stash.size();
-	for (int i = 0; i < quantity; i++)
+	for (int i = 0; i < stash.size(); i++)
 	{
-		if (stash[i].itemid == item.itemid)
+		if (stash[i].itemid == checkid)
 		{
-			stash.erase(stash.begin() + i);
-			return true;
+			return i;
 		}
 	}
-	return false;
+	return -1;
+}
+
+Item Room::PassFromStash(int pointvector)
+{
+	return stash[pointvector];
+}
+
+void Room::RemoveFromStash(int pointvector)
+{
+	stash.erase(stash.begin() + pointvector);
 }
 
 void Room::OpenDoor(int dir)

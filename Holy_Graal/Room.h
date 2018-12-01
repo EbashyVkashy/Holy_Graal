@@ -10,7 +10,9 @@ public:
 	int light; //0-no light, 1-light, 2-lighted with torch
 	void RoomInit();
 	void AddToStash(Item &item);
-	bool RemoveFromStash(Item &item);
+	int CheckStash(int checkid); // -1 - no such item, 0-100 item pos in vector
+	Item PassFromStash(int pointvector);
+	void RemoveFromStash(int pointvector);
 	void OpenDoor(int dir);
 	Room();
 	~Room();
