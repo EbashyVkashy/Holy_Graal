@@ -26,6 +26,26 @@ void Viev::AskHeight()
 	std::cout << "Please enter height of the Labyrinth: ";
 }
 
+void Viev::YourCommand()
+{
+	std::cout << "Your command: ";
+}
+
+void Viev::WrongCommand()
+{
+	std::cout << "Wrong command!" << std::endl;
+}
+
+void Viev::WrongNameDoor()
+{
+	std::cout << "Wrong name of the door!" << std::endl;
+}
+
+void Viev::NoDoor()
+{
+	std::cout << "There is no door!" << std::endl;
+}
+
 void Viev::WritePosition(const Model &mod)
 {
 	std::cout << "You are in the room [" << mod.player.posx << "." << mod.player.posy << "]. There are [";

@@ -10,6 +10,7 @@ public:
 	Labyrinth labyrinth;
 	bool CheckWidth(int x);
 	bool CheckHeight(int y);
+	int Move(std::string dir);
 	Model();
 	~Model();
 };

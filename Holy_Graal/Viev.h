@@ -9,6 +9,10 @@ public:
 	void Rules();
 	void AskWidth();
 	void AskHeight();
+	void YourCommand();
+	void WrongCommand();
+	void WrongNameDoor();
+	void NoDoor();
 	void WritePosition(const Model &);
 	Viev();
 	~Viev();
