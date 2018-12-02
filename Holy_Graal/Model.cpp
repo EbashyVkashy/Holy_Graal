@@ -18,6 +18,90 @@ bool Model::CheckHeight(int y)
 	return false;
 }
 
+void Model::GenerateLevel()
+{
+	Item additem;
+	labyrinth.LabCreation(labyrinth.width, labyrinth.height);				//initializing labyrthing
+	labyrinth.enterx = std::rand() % labyrinth.width;		//adding core obj (enter chest key)
+	labyrinth.entery = std::rand() % labyrinth.height;
+	do
+	{
+		labyrinth.keyx = std::rand() % labyrinth.width;
+		labyrinth.keyy = std::rand() % labyrinth.height;
+	} while (labyrinth.enterx == labyrinth.keyx && labyrinth.keyy == labyrinth.entery);
+	additem.CreateItem(1); // 1-key
+	labyrinth.rooms[labyrinth.keyx * labyrinth.height + labyrinth.keyy].AddToStash(additem);
+	do
+	{
+		labyrinth.chestx = std::rand() % labyrinth.width;
+		labyrinth.chesty = std::rand() % labyrinth.height;
+	} while ((labyrinth.enterx == labyrinth.chestx && labyrinth.entery == labyrinth.chesty) || (labyrinth.keyx == labyrinth.chestx && labyrinth.keyy == labyrinth.chesty));
+
+	additem.CreateItem(2); // 2-chest
+	labyrinth.rooms[labyrinth.chestx * labyrinth.height + labyrinth.chesty].AddToStash(additem);
+
+	if (labyrinth.enterx > labyrinth.keyx) 						//adding path between core obj
+	{
+		for (int i = labyrinth.enterx; i > labyrinth.keyx; i--)
+		{
+			labyrinth.OpenSide(i, labyrinth.entery, 0);
+		}
+	}
+	if (labyrinth.enterx < labyrinth.keyx)
+	{
+		for (int i = labyrinth.enterx; i < labyrinth.keyx; i++)
+		{
+			labyrinth.OpenSide(i, labyrinth.entery, 2);
+		}
+	}
+	if (labyrinth.entery > labyrinth.keyy)
+	{
+		for (int i = labyrinth.entery; i > labyrinth.keyy; i--)
+		{
+			labyrinth.OpenSide(labyrinth.keyx, i, 3);
+		}
+	}
+	if (labyrinth.entery < labyrinth.keyy)
+	{
+		for (int i = labyrinth.entery; i < labyrinth.keyy; i++)
+		{
+			labyrinth.OpenSide(labyrinth.keyx, i, 1);
+		}
+	}
+	if (labyrinth.enterx > labyrinth.chestx)
+	{
+		for (int i = labyrinth.enterx; i > labyrinth.chestx; i--)
+		{
+			labyrinth.OpenSide(i, labyrinth.entery, 0);
+		}
+	}
+	if (labyrinth.enterx < labyrinth.chestx)
+	{
+		for (int i = labyrinth.enterx; i < labyrinth.chestx; i++)
+		{
+			labyrinth.OpenSide(i, labyrinth.chesty, 2);
+		}
+	}
+	if (labyrinth.entery > labyrinth.chesty)
+	{
+		for (int i = labyrinth.entery; i > labyrinth.chesty; i--)
+		{
+			labyrinth.OpenSide(labyrinth.chestx, i, 3);
+		}
+	}
+	if (labyrinth.entery < labyrinth.chesty)
+	{
+		for (int i = labyrinth.chesty; i < labyrinth.chesty; i++)
+		{
+			labyrinth.OpenSide(labyrinth.chestx, i, 1);
+		}
+	}
+	for (int i = 0; i < (labyrinth.width * labyrinth.height); i++) //add random doors
+	{
+		labyrinth.OpenSide(rand() % labyrinth.width, rand() % labyrinth.height, rand() % 4);
+	}
+}
+
 int Model::Move(std::string dir) //0-wrong name of door, 1-succes, 2-no door
 {
 	if (dir == "W" && labyrinth.rooms[player.pospoint].walls[0] == 1)
@@ -55,7 +139,7 @@ int Model::Move(std::string dir) //0-wrong name of door, 1-succes, 2-no door
 	return 0;
 }
 
-int Model::GetItem(std::string itemname) //0-wrong item name, 1-get key, 2-get chest, 3-no such item
+int Model::GetItem(std::string itemname) //0-wrong item name, 1-no such item, 2-get chest, 3-key
 {
 	int stashpointer = labyrinth.rooms[player.pospoint].CheckStash(1);
 	if (itemname == "key" && stashpointer >= 0)
@@ -64,11 +148,11 @@ int Model::GetItem(std::string itemname) //0-wrong item name, 1-get key, 2-get c
 		tempitem = labyrinth.rooms[player.pospoint].PassFromStash(stashpointer);
 		labyrinth.rooms[player.pospoint].RemoveFromStash(stashpointer);
 		player.AddToInventory(tempitem);
-		return 1;
+		return 3;
 	}
 	else if (itemname == "key" && stashpointer < 0)
 	{
-		return 3;
+		return 1;
 	}
 	stashpointer = labyrinth.rooms[player.pospoint].CheckStash(2);
 	if (itemname == "chest" && stashpointer >= 0)
@@ -77,7 +161,26 @@ int Model::GetItem(std::string itemname) //0-wrong item name, 1-get key, 2-get c
 	}
 	else if (itemname == "chest" && stashpointer < 0)
 	{
-		return 3;
+		return 1;
+	}
+	return 0;
+}
+
+int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 2-drop
+{
+	int inventorypointer = player.CheckInventory(1);
+	if (itemname == "key" && inventorypointer >= 0)
+	{
+		Item tempitem;
+		tempitem =  player.PassFromInv(inventorypointer);
+		player.RemoveFromInv(inventorypointer);
+		player.AddToInventory(tempitem);
+		labyrinth.rooms[player.pospoint].AddToStash(tempitem);
+		return 2;
+	}
+	else if (itemname == "key" && inventorypointer < 0)
+	{
+		return 1;
 	}
 	return 0;
 }

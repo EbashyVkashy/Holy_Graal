@@ -12,6 +12,8 @@ public:
 	bool CheckHeight(int y);
 	int Move(std::string dir);
 	int GetItem(std::string itemname);
+	int DropItem(std::string itemname);
+	void GenerateLevel();
 	Model();
 	~Model();
 };

@@ -22,7 +22,7 @@ int main()
 		model.labyrinth.height = controller.ListenSize();
 	} while (model.CheckHeight(model.labyrinth.height) != true);
 
-	model.labyrinth = controller.GenerateLevel(model.labyrinth.width, model.labyrinth.height);
+	model.GenerateLevel();
 	model.player.PlacePlayer(model.labyrinth.enterx, model.labyrinth.entery, model.labyrinth.height);
 
 
@@ -56,26 +56,43 @@ int main()
 		}
 		case 2:
 		{
-			int temp = model.GetItem(controller.lastcommand); //0-wrong item name, 1-get key, 2-get chest, 3-no such item
+			int temp = model.GetItem(controller.lastcommand); //0-wrong item name, 1-no such item, 2-get chest, 3-get key
 			switch (temp)
 			{
 			case 0:
 				viev.WrongItemName();
 				break;
 			case 1:
+				viev.NoItem();
 				break;
 			case 2:
 				viev.ChestLift();
 				break;
 			case 3:
-				viev.NoItem();
+				break;
 			default:
 				break;
 			}
 		break;
 		}
 		case 3:
+		{
+			int temp = model.DropItem(controller.lastcommand); // 0-wrong item name, 1-no such item, 2-drop
+			switch (temp)
+			{
+			case 0:
+				viev.WrongItemName();
+				break;
+			case 1:
+				viev.NoItem();
+				break;
+			case 2:
+				break;
+			default:
+				break;
+			}
 			break;
+		}
 		default:
 			break;
 		}
