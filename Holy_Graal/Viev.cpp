@@ -61,6 +61,31 @@ void Viev::NoItem()
 	std::cout << "There is no such item!" << std::endl;
 }
 
+void Viev::NoChest()
+{
+	std::cout << "There is no chest!" << std::endl;
+}
+
+void Viev::DontHaveKey()
+{
+	std::cout << "You dont have key" << std::endl;
+}
+
+void Viev::GotGraal()
+{
+	std::cout << "Wow you found Holy Graal!" << std::endl;
+}
+
+void Viev::YouDied()
+{
+	std::cout << "You found your death in this labyrinth!" << std::endl;
+}
+
+void Viev::YouWon()
+{
+	std::cout << "Congratulation you won!" << std::endl;
+}
+
 void Viev::WritePosition(const Model &mod)
 {
 	std::cout << "You are in the room [" << mod.player.posx << "." << mod.player.posy << "]. There are [";

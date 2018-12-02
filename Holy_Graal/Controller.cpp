@@ -10,7 +10,7 @@ int Controller::ListenSize()
 	return  value;
 }
 
-int Controller::ListenCommand()   // 0-no such command, 1 - move, 2 - get, 3 - drop.
+int Controller::ListenCommand()   // 0-no such command, 1 - move, 2 - get, 3 - drop, 4 - open
 {
 	std::getline(std::cin, lastcommand);
 	if (lastcommand == "W" || lastcommand == "N" || lastcommand == "E" || lastcommand == "S")
@@ -26,6 +26,10 @@ int Controller::ListenCommand()   // 0-no such command, 1 - move, 2 - get, 3 - d
 	{
 		lastcommand = lastcommand.substr(5, lastcommand.length());
 		return 3;
+	}
+	if (lastcommand == "open")
+	{
+		return 4;
 	}
 	return 0;
 }

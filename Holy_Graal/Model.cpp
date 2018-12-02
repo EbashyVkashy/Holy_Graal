@@ -185,6 +185,21 @@ int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 
 	return 0;
 }
 
+int Model::OpenChest() // 0 - no chest, 1 - no key, 2 - succes
+{
+	int stashpointer = labyrinth.rooms[player.pospoint].CheckStash(2);
+	if (stashpointer < 0)
+	{
+		return 0;
+	}
+	int inventorypointer = player.CheckInventory(1);
+	if (inventorypointer < 0)
+	{
+		return 1;
+	}
+	return 2;
+}
+
 Model::Model()
 {
 }

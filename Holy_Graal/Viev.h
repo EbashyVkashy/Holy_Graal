@@ -16,6 +16,11 @@ public:
 	void WrongItemName();
 	void ChestLift();
 	void NoItem();
+	void NoChest();
+	void DontHaveKey();
+	void GotGraal();
+	void YouDied();
+	void YouWon();
 	void WritePosition(const Model &);
 	Viev();
 	~Viev();

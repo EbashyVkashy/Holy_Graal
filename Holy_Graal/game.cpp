@@ -8,6 +8,7 @@ int main()
 	Viev viev;
 	Model model;
 	int commandid;
+	bool victoryflag = false;
 	viev.Wellcome();
 	viev.Rules();
 
@@ -26,12 +27,12 @@ int main()
 	model.player.PlacePlayer(model.labyrinth.enterx, model.labyrinth.entery, model.labyrinth.height);
 
 
-	while (model.player.life > 0)
+	while (model.player.life > 0 && victoryflag == false)
 	{
 		viev.WritePosition(model);
 		viev.YourCommand();
 		commandid = controller.ListenCommand();
-		switch (commandid) // 0-no such command, 1 - move, 2 - get, 3 - drop.
+		switch (commandid) // 0-no such command, 1 - move, 2 - get, 3 - drop, 4 - open
 		{
 		case 0:
 			viev.WrongCommand();
@@ -93,8 +94,37 @@ int main()
 			}
 			break;
 		}
+		case 4:
+		{
+			int temp = model.OpenChest();
+			switch (temp)
+			{
+			case 0:
+				viev.NoChest();
+				break;
+			case 1:
+				viev.DontHaveKey();
+				break;
+			case 2:
+				viev.GotGraal();
+				victoryflag = true;
+				break;
+			default:
+				break;
+			}
+			break;
+		}
 		default:
 			break;
 		}
 	}
+	if (model.player.life < 1)
+	{
+		viev.YouDied();
+	}
+	if (victoryflag == true)
+	{
+		viev.YouWon();
+	}
+	std::cin >> commandid;
 }
