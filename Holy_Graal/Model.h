@@ -20,6 +20,7 @@ public:
 	void DropItem(std::string itemname);
 	void EatFood(std::string itemname);
 	void GenerateLevel();
+	void PlayerGotHit();
 	Model();
 	~Model();
 };

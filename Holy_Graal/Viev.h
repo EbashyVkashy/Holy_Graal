@@ -25,6 +25,7 @@ public:
 	void YouCanOnlyMove();
 	void NoSuchFood();
 	void TooSlow();
+	void MoveToPrev();
 	void MonsterHere(const std::string &);
 	void WritePosition(const Model &);
 	Viev();

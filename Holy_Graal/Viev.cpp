@@ -106,6 +106,11 @@ void Viev::TooSlow()
 	std::cout << "You were too slow!" << std::endl;
 }
 
+void Viev::MoveToPrev()
+{
+	std::cout << "You were moved to previos room." << std::endl;
+}
+
 void Viev::MonsterHere(const std::string & mobname)
 {
 	std::cout << "There is an evil " << mobname << " in the room!" << std::endl;

@@ -249,6 +249,11 @@ void Model::GenerateLevel()
 	}
 }
 
+void Model::PlayerGotHit()
+{
+	player.life = player.life - (player.initlife % 10);
+}
+
 void Model::Move(std::string dir) //0-wrong name of door, 1-succes, 2-no door
 {
 	if (dir == "W" && labyrinth.rooms[player.pospoint].walls[0] == 1)
@@ -293,7 +298,6 @@ void Model::FailAtMonster()
 	player.posx = tempx;
 	player.posy = tempy;
 	player.pospoint = temppos;
-	player.life = player.life - (player.initlife % 10);
 }
 
 bool Model::DoCommand(std::string command,int commandtype) //  1 - move, 2 - get, 3 - drop, 4 - open, 5 - eat
