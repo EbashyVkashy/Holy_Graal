@@ -9,6 +9,7 @@ public:
 	int posy;
 	int pospoint;
 	int life;
+	int initlife;
 	std::vector<Item> inventory;
 	void PlacePlayer(int x, int y, int maxy);
 	void AddToInventory(Item &);

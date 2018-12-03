@@ -13,6 +13,7 @@ public:
 	int Move(std::string dir);
 	int GetItem(std::string itemname);
 	int DropItem(std::string itemname);
+	int EatFood(std::string itemname);
 	int OpenChest();
 	void GenerateLevel();
 	Model();

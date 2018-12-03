@@ -103,7 +103,7 @@ void Model::GenerateLevel()
 		labyrinth.OpenSide(rand() % labyrinth.width, rand() % labyrinth.height, rand() % 4);
 	}
 	
-	for (int i = 0; i < (labyrinth.width * labyrinth.height / 3); i++)  //add dark rooms
+	for (int i = 0; i < (labyrinth.width * labyrinth.height / 5); i++)  //add dark rooms
 	{
 		labyrinth.rooms[rand() % (labyrinth.width * labyrinth.height)].light = 0;
 	}
@@ -118,6 +118,12 @@ void Model::GenerateLevel()
 		{
 			labyrinth.rooms[tempx * labyrinth.height + tempy].light = 2;
 		}
+	}
+	for (int i = 0; i < (labyrinth.width * labyrinth.height / 3); i++)		//add food
+	{
+		Item tempitem;
+		tempitem.CreateItem(4);
+		labyrinth.rooms[rand() % (labyrinth.width * labyrinth.height)].AddToStash(tempitem);
 	}
 }
 
@@ -236,7 +242,19 @@ int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 
 	return 0;
 }
 
-int Model::OpenChest() // 0 - no chest, 1 - no key, 2 - succes
+int Model::EatFood(std::string itemname) // 0 - no such food; 1 -success
+{
+	int stashpointer = labyrinth.rooms[player.pospoint].CheckStashFood(itemname);
+	if (stashpointer >= 0)
+	{
+		labyrinth.rooms[player.pospoint].RemoveFromStash(stashpointer);
+		player.life = player.life + (player.initlife % 10);
+		return 1;
+	}
+	return 0;
+}
+
+int Model::OpenChest() // 0 - no chest, 1 - no key, 2 - success
 {
 	int stashpointer = labyrinth.rooms[player.pospoint].CheckStash(2);
 	if (stashpointer < 0)

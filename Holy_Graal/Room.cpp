@@ -26,6 +26,18 @@ int Room::CheckStash(int checkid)
 	return -1;
 }
 
+int Room::CheckStashFood(std::string foodcheck)
+{
+	for (int i = 0; i < stash.size(); i++)
+	{
+		if (stash[i].name == foodcheck)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 Item Room::PassFromStash(int pointvector)
 {
 	return stash[pointvector];

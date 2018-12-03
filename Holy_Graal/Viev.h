@@ -1,6 +1,6 @@
 #pragma once
 #include "Model.h"
-
+#include <string>
 
 class Viev
 {
@@ -23,7 +23,8 @@ public:
 	void YouWon();
 	void CantSee();
 	void YouCanOnlyMove();
-	
+	void NoSuchFood();
+	void YouAte(const std::string &);
 	void WritePosition(const Model &);
 	Viev();
 	~Viev();

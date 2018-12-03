@@ -96,6 +96,16 @@ void Viev::YouCanOnlyMove()
 	std::cout << "You can only move!" << std::endl;
 }
 
+void Viev::NoSuchFood()
+{
+	std::cout << "There is no food with this name";
+}
+
+void Viev::YouAte(const std::string & foodname)
+{
+	std::cout << "You ate " << foodname << ", and restored 10% of initial hp!" << std::endl;
+}
+
 void Viev::WritePosition(const Model &mod)
 {
 	std::cout << "You are in the room [" << mod.player.posx << "." << mod.player.posy << "]. There are [";

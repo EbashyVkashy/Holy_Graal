@@ -58,7 +58,7 @@ void StandardRoom()
 	view.WritePosition(model);
 	view.YourCommand();
 	commandid = controller.ListenCommand();
-	switch (commandid) // 0-no such command, 1 - move, 2 - get, 3 - drop, 4 - open
+	switch (commandid) // 0-no such command, 1 - move, 2 - get, 3 - drop, 4 - open, 5 - eat
 	{
 	case 0:
 		view.WrongCommand();
@@ -139,6 +139,21 @@ void StandardRoom()
 			break;
 		}
 		break;
+	}
+	case 5:
+	{
+		int temp = model.EatFood(controller.lastcommand);  //0 - no such food; 1 - success
+		switch (temp)
+		{
+		case 0:
+			view.NoSuchFood();
+			break;
+		case 1:
+			view.YouAte(controller.lastcommand);
+			break;
+		default:
+			break;
+		}
 	}
 	default:
 		break;

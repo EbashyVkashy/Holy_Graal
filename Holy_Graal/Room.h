@@ -11,6 +11,7 @@ public:
 	void RoomInit();
 	void AddToStash(Item &item);
 	int CheckStash(int checkid); // -1 - no such item, 0-100 item pos in vector
+	int CheckStashFood(std::string foodcheck);
 	Item PassFromStash(int pointvector);
 	void RemoveFromStash(int pointvector);
 	void OpenDoor(int dir);
