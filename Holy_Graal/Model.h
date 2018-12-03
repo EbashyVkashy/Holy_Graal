@@ -5,16 +5,20 @@
 
 class Model
 {
+private:
+	void PrevPosition();
 public:
 	Player player;
 	Labyrinth labyrinth;
 	bool CheckWidth(int x);
 	bool CheckHeight(int y);
-	int Move(std::string dir);
-	int GetItem(std::string itemname);
-	int DropItem(std::string itemname);
-	int EatFood(std::string itemname);
-	int OpenChest();
+	int CheckCommand(std::string command, int commandtype);
+	void Move(std::string dir);
+	void FailAtMonster();
+	bool DoCommand(std::string command, int commandtype);
+	void GetItem(std::string itemname);
+	void DropItem(std::string itemname);
+	void EatFood(std::string itemname);
 	void GenerateLevel();
 	Model();
 	~Model();

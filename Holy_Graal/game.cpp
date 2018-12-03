@@ -10,6 +10,7 @@ int commandid;
 bool victoryflag = false;
 void StandardRoom();
 void DarkRoom();
+void MonsterRoom();
 
 int main()
 {
@@ -37,6 +38,10 @@ int main()
 		{
 			DarkRoom();
 		}
+		else if (model.labyrinth.rooms[model.player.pospoint].monsterexistence == true)
+		{
+			MonsterRoom();
+		}
 		else
 		{
 			StandardRoom();
@@ -48,6 +53,7 @@ int main()
 	}
 	if (victoryflag == true)
 	{
+		view.GotGraal();
 		view.YouWon();
 	}
 	std::cin >> commandid;
@@ -55,141 +61,126 @@ int main()
 
 void StandardRoom()
 {
+	int temp;
 	view.WritePosition(model);
 	view.YourCommand();
 	commandid = controller.ListenCommand();
-	switch (commandid) // 0-no such command, 1 - move, 2 - get, 3 - drop, 4 - open, 5 - eat
+	temp = model.CheckCommand(controller.lastcommand, commandid);
+	if (temp == -1)
 	{
-	case 0:
 		view.WrongCommand();
-		break;
-	case 1:
-	{
-		int temp = model.Move(controller.lastcommand);  //0-wrong name of door, 1-succes, 2-no door
-		switch (temp)
-		{
-		case 0:
-			view.WrongNameDoor();
-			break;
-		case 1:
-			break;
-		case 2:
-			view.NoDoor();
-			break;
-		default:
-			break;
-		}
-		break;
+		return;
 	}
-	case 2:
+	else if (commandid == 1 && temp == 0)
 	{
-		int temp = model.GetItem(controller.lastcommand); //0-wrong item name, 1-no such item, 2-get chest, 3-get key
-		switch (temp)
-		{
-		case 0:
-			view.WrongItemName();
-			break;
-		case 1:
-			view.NoItem();
-			break;
-		case 2:
-			view.ChestLift();
-			break;
-		case 3:
-			break;
-		default:
-			break;
-		}
-		break;
+		view.NoDoor();
 	}
-	case 3:
+	else if (commandid == 2 && temp == 0)
 	{
-		int temp = model.DropItem(controller.lastcommand); // 0-wrong item name, 1-no such item, 2-drop
-		switch (temp)
-		{
-		case 0:
-			view.WrongItemName();
-			break;
-		case 1:
-			view.NoItem();
-			break;
-		case 2:
-			break;
-		default:
-			break;
-		}
-		break;
+		view.WrongItemName();
 	}
-	case 4:
+	else if (commandid == 2 && temp == 2)
 	{
-		int temp = model.OpenChest();
-		switch (temp)
-		{
-		case 0:
-			view.NoChest();
-			break;
-		case 1:
-			view.DontHaveKey();
-			break;
-		case 2:
-			view.GotGraal();
-			victoryflag = true;
-			break;
-		default:
-			break;
-		}
-		break;
+		view.NoItem();
 	}
-	case 5:
+	else if (commandid == 3 && temp == 0)
 	{
-		int temp = model.EatFood(controller.lastcommand);  //0 - no such food; 1 - success
-		switch (temp)
-		{
-		case 0:
-			view.NoSuchFood();
-			break;
-		case 1:
-			view.YouAte(controller.lastcommand);
-			break;
-		default:
-			break;
-		}
+		view.WrongItemName();
 	}
-	default:
-		break;
+	else if (commandid == 3 && temp == 2)
+	{
+		view.NoItem();
+	}
+	else if (commandid == 4 && temp == 0)
+	{
+		view.NoChest();
+	}
+	else if (commandid == 4 && temp == 2)
+	{
+		view.DontHaveKey();
+	}
+	else if (commandid == 5 && temp == 0)
+	{
+		view.NoSuchFood();
+	}
+	else
+	{
+		victoryflag = model.DoCommand(controller.lastcommand, commandid);
 	}
 }
 
 void DarkRoom()
 {
+	int temp;
 	view.CantSee();
 	view.YourCommand();
 	commandid = controller.ListenCommand();
-	switch (commandid)
+	temp = model.CheckCommand(controller.lastcommand, commandid);
+	if (temp == -1)
 	{
-	case 0:
 		view.WrongCommand();
-		break;
-	case 1:
-	{
-		int temp = model.Move(controller.lastcommand);  //0-wrong name of door, 1-succes, 2-no door
-		switch (temp)
-		{
-		case 0:
-			view.WrongNameDoor();
-			break;
-		case 1:
-			break;
-		case 2:
-			view.NoDoor();
-			break;
-		default:
-			break;
-		}
-		break;
+		return;
 	}
-	default:
+	else if (commandid == 1 && temp == 0)
+	{
+		view.NoDoor();
+	}
+	else if (commandid == 1 && temp == 1)
+	{
+		model.DoCommand(controller.lastcommand, commandid);
+	}
+	else
+	{
 		view.YouCanOnlyMove();
-		break;
+	}
+}
+void MonsterRoom()
+{
+	int temp;
+	view.WritePosition(model);
+	view.MonsterHere(model.labyrinth.rooms[model.player.pospoint].monster.name);
+	view.YourCommand();
+	commandid = controller.ListenCommand();
+	temp = model.CheckCommand(controller.lastcommand, commandid);
+	if (temp == -1)
+	{
+		view.WrongCommand();
+		return;
+	}
+	else if (commandid == 1 && temp == 0)
+	{
+		view.NoDoor();
+	}
+	else if (commandid == 2 && temp == 0)
+	{
+		view.WrongItemName();
+	}
+	else if (commandid == 2 && temp == 2)
+	{
+		view.NoItem();
+	}
+	else if (commandid == 3 && temp == 0)
+	{
+		view.WrongItemName();
+	}
+	else if (commandid == 3 && temp == 2)
+	{
+		view.NoItem();
+	}
+	else if (commandid == 4 && temp == 0)
+	{
+		view.NoChest();
+	}
+	else if (commandid == 4 && temp == 2)
+	{
+		view.DontHaveKey();
+	}
+	else if (commandid == 5 && temp == 0)
+	{
+		view.NoSuchFood();
+	}
+	else
+	{
+		victoryflag = model.DoCommand(controller.lastcommand, commandid);
 	}
 }

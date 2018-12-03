@@ -7,6 +7,7 @@ void Room::RoomInit()
 			walls[i] = 0;
 	}
 	light = 1;
+	monsterexistence = false;
 }
 
 void Room::AddToStash(Item &item)

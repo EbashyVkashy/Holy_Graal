@@ -24,7 +24,8 @@ public:
 	void CantSee();
 	void YouCanOnlyMove();
 	void NoSuchFood();
-	void YouAte(const std::string &);
+	void TooSlow();
+	void MonsterHere(const std::string &);
 	void WritePosition(const Model &);
 	Viev();
 	~Viev();

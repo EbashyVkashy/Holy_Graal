@@ -101,9 +101,14 @@ void Viev::NoSuchFood()
 	std::cout << "There is no food with this name";
 }
 
-void Viev::YouAte(const std::string & foodname)
+void Viev::TooSlow()
 {
-	std::cout << "You ate " << foodname << ", and restored 10% of initial hp!" << std::endl;
+	std::cout << "You were too slow!" << std::endl;
+}
+
+void Viev::MonsterHere(const std::string & mobname)
+{
+	std::cout << "There is an evil " << mobname << " in the room!" << std::endl;
 }
 
 void Viev::WritePosition(const Model &mod)

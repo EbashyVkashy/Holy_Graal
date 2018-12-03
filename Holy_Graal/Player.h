@@ -7,7 +7,10 @@ class Player
 public:
 	int posx;
 	int posy;
+	int prevposx;
+	int prevposy;
 	int pospoint;
+	int prevpospoint;
 	int life;
 	int initlife;
 	std::vector<Item> inventory;

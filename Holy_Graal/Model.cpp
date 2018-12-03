@@ -1,5 +1,11 @@
 #include "Model.h"
 #include <iostream>
+void Model::PrevPosition()
+{
+	player.prevposx = player.posx;
+	player.prevposy = player.posy;
+	player.prevpospoint = player.pospoint;
+}
 bool Model::CheckWidth(int x)
 {
 	if (x > 3 && x < 50)
@@ -16,6 +22,110 @@ bool Model::CheckHeight(int y)
 		return true;
 	}
 	return false;
+}
+
+int Model::CheckCommand(std::string command, int commandtype)  // 0 - no such command, 1 - move, 2 - get, 3 - drop, 4 - open, 5 - eat
+{
+	switch (commandtype)
+	{
+	case 0:
+		return -1;
+		break;
+	case 1:
+	{
+		if ((command == "W" && labyrinth.rooms[player.pospoint].walls[0] == 1) || (command == "N" && labyrinth.rooms[player.pospoint].walls[1] == 1) ||
+			(command == "E" && labyrinth.rooms[player.pospoint].walls[2] == 1) || (command == "S" && labyrinth.rooms[player.pospoint].walls[3] == 1))
+		{
+			return 1;
+			break;
+		}
+		return 0;
+		break;
+	}
+	case 2:  //0-wrong item name, 1-success, 2-no such item
+	{
+		int stashpointer = labyrinth.rooms[player.pospoint].CheckStash(1);
+		if (command == "key" && stashpointer >= 0)
+		{
+			return 1;
+		}
+		else if (command == "key" && stashpointer < 0)
+		{
+			return 2;
+		}
+		stashpointer = labyrinth.rooms[player.pospoint].CheckStash(2);
+		if (command == "chest" && stashpointer >= 0)
+		{
+			return 1;
+		}
+		else if (command == "chest" && stashpointer < 0)
+		{
+			return 2;
+		}
+		stashpointer = labyrinth.rooms[player.pospoint].CheckStash(3);
+		if (command == "torch" && stashpointer >= 0)
+		{
+			return 1;
+		}
+		else if (command == "torch" && stashpointer < 0)
+		{
+			return 2;
+		}
+		return 0;
+		break;
+	}
+	case 3: //0-wrong item name, 1-success, 2-no such item
+	{
+		int inventorypointer = player.CheckInventory(1);
+		if (command == "key" && inventorypointer >= 0)
+		{	
+			return 1;
+		}
+		else if (command == "key" && inventorypointer < 0)
+		{
+			return 2;
+		}
+		inventorypointer = player.CheckInventory(3);
+		if (command == "torch" && inventorypointer >= 0)
+		{
+			return 1;
+		}
+		else if (command == "torch" && inventorypointer < 0)
+		{
+			return 2;
+		}
+		return 0;
+		break;
+	}
+	case 4: //0 - no chest 1 -success 2 - no key
+	{
+		int stashpointer = labyrinth.rooms[player.pospoint].CheckStash(2);
+		if (stashpointer < 0)
+		{
+			return 0;
+		}
+		int inventorypointer = player.CheckInventory(1);
+		if (inventorypointer < 0)
+		{
+			return 2;
+		}
+		return 1;
+		break;	
+	}
+	case 5: // 0 - no such food; 1 -success
+	{
+		int stashpointer = labyrinth.rooms[player.pospoint].CheckStashFood(command);
+		if (stashpointer >= 0)
+		{
+			return 1;
+		}
+		return 0;
+		break;
+	}
+	default:
+		break;
+	}
+	return -1;
 }
 
 void Model::GenerateLevel()
@@ -103,7 +213,7 @@ void Model::GenerateLevel()
 		labyrinth.OpenSide(rand() % labyrinth.width, rand() % labyrinth.height, rand() % 4);
 	}
 	
-	for (int i = 0; i < (labyrinth.width * labyrinth.height / 5); i++)  //add dark rooms
+	for (int i = 0; i < (labyrinth.width * labyrinth.height / 2); i++)  //add dark rooms
 	{
 		labyrinth.rooms[rand() % (labyrinth.width * labyrinth.height)].light = 0;
 	}
@@ -125,46 +235,99 @@ void Model::GenerateLevel()
 		tempitem.CreateItem(4);
 		labyrinth.rooms[rand() % (labyrinth.width * labyrinth.height)].AddToStash(tempitem);
 	}
+	for (int i = 0; i < (labyrinth.width * labyrinth.height / 3); i++)		//add Monsters
+	{
+		Monster tempmonster;
+		tempmonster.CreateMonster();
+		int tempx = rand() % labyrinth.width;
+		int tempy = rand() % labyrinth.height;
+		if (tempx != labyrinth.enterx || tempy != labyrinth.entery)
+		{
+			labyrinth.rooms[tempx * labyrinth.height + tempy].monster = tempmonster;
+			labyrinth.rooms[tempx * labyrinth.height + tempy].monsterexistence = true;
+		}
+	}
 }
 
-int Model::Move(std::string dir) //0-wrong name of door, 1-succes, 2-no door
+void Model::Move(std::string dir) //0-wrong name of door, 1-succes, 2-no door
 {
 	if (dir == "W" && labyrinth.rooms[player.pospoint].walls[0] == 1)
 	{
+		PrevPosition();
 		player.posx -= 1;
 		player.pospoint -= labyrinth.height;
 		player.life -= 1;
-		return 1;
 	}
 	else if (dir == "N" && labyrinth.rooms[player.pospoint].walls[1] == 1)
 	{
+		PrevPosition();
 		player.posy += 1;
 		player.pospoint += 1;
 		player.life -= 1;
-		return 1;
 	}
 	else if (dir == "E" && labyrinth.rooms[player.pospoint].walls[2] == 1)
 	{
+		PrevPosition();
 		player.posx += 1;
 		player.pospoint += labyrinth.height;
 		player.life -= 1;
-		return 1;
 	}
 	else if (dir == "S" && labyrinth.rooms[player.pospoint].walls[3] == 1)
 	{
+		PrevPosition();
 		player.posy -= 1;
 		player.pospoint -= 1;
 		player.life -= 1;
-		return 1;
 	}
-	else if (dir == "W" || dir == "N" || dir == "E" || dir == "S")
-	{
-		return 2;
-	}
-	return 0;
 }
 
-int Model::GetItem(std::string itemname) //0-wrong item name, 1-no such item, 2-get chest, 3-key
+void Model::FailAtMonster()
+{
+	int tempx;
+	int tempy;
+	int temppos;
+	tempx = player.prevposx;
+	tempy = player.prevposy;
+	temppos = player.prevpospoint;
+	PrevPosition();
+	player.posx = tempx;
+	player.posy = tempy;
+	player.pospoint = temppos;
+	player.life = player.life - (player.initlife % 10);
+}
+
+bool Model::DoCommand(std::string command,int commandtype) //  1 - move, 2 - get, 3 - drop, 4 - open, 5 - eat
+{
+	switch (commandtype)
+	{
+	case 1:
+		Move(command);
+		return false;
+		break;
+	case 2:
+		GetItem(command);
+		return false;
+		break;
+	case 3:
+		DropItem(command);
+		return false;
+		break;
+	case 4:
+		return true;
+		break;
+	case 5:
+		EatFood(command);
+		return false;
+		break;
+	default:
+		return false;
+		break;
+	}
+	return false;
+}
+
+
+void Model::GetItem(std::string itemname) //0-wrong item name, 1-no such item, 2-get chest, 3-key
 {
 	int stashpointer = labyrinth.rooms[player.pospoint].CheckStash(1);
 	if (itemname == "key" && stashpointer >= 0)
@@ -173,21 +336,8 @@ int Model::GetItem(std::string itemname) //0-wrong item name, 1-no such item, 2-
 		tempitem = labyrinth.rooms[player.pospoint].PassFromStash(stashpointer);
 		labyrinth.rooms[player.pospoint].RemoveFromStash(stashpointer);
 		player.AddToInventory(tempitem);
-		return 3;
 	}
-	else if (itemname == "key" && stashpointer < 0)
-	{
-		return 1;
-	}
-	stashpointer = labyrinth.rooms[player.pospoint].CheckStash(2);
-	if (itemname == "chest" && stashpointer >= 0)
-	{
-		return 2;
-	}
-	else if (itemname == "chest" && stashpointer < 0)
-	{
-		return 1;
-	}
+
 	stashpointer = labyrinth.rooms[player.pospoint].CheckStash(3);
 	if (itemname == "torch" && stashpointer >= 0)
 	{
@@ -199,15 +349,9 @@ int Model::GetItem(std::string itemname) //0-wrong item name, 1-no such item, 2-
 		{
 			labyrinth.rooms[player.pospoint].light = 0;
 		}
-		return 3;
 	}
-	else if (itemname == "torch" && stashpointer < 0)
-	{
-		return 1;
-	}
-	return 0;
 }
-int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 2-drop
+void Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 2-drop
 {
 	int inventorypointer = player.CheckInventory(1);
 	if (itemname == "key" && inventorypointer >= 0)
@@ -216,11 +360,6 @@ int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 
 		tempitem =  player.PassFromInv(inventorypointer);
 		player.RemoveFromInv(inventorypointer);
 		labyrinth.rooms[player.pospoint].AddToStash(tempitem);
-		return 2;
-	}
-	else if (itemname == "key" && inventorypointer < 0)
-	{
-		return 1;
 	}
 	inventorypointer = player.CheckInventory(3);
 	if (itemname == "torch" && inventorypointer >= 0)
@@ -233,40 +372,17 @@ int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 
 		{
 			labyrinth.rooms[player.pospoint].light = 2;
 		}
-		return 2;
 	}
-	else if (itemname == "torch" && inventorypointer < 0)
-	{
-		return 1;
-	}
-	return 0;
 }
 
-int Model::EatFood(std::string itemname) // 0 - no such food; 1 -success
+void Model::EatFood(std::string itemname) // 0 - no such food; 1 -success
 {
 	int stashpointer = labyrinth.rooms[player.pospoint].CheckStashFood(itemname);
 	if (stashpointer >= 0)
 	{
 		labyrinth.rooms[player.pospoint].RemoveFromStash(stashpointer);
 		player.life = player.life + (player.initlife % 10);
-		return 1;
 	}
-	return 0;
-}
-
-int Model::OpenChest() // 0 - no chest, 1 - no key, 2 - success
-{
-	int stashpointer = labyrinth.rooms[player.pospoint].CheckStash(2);
-	if (stashpointer < 0)
-	{
-		return 0;
-	}
-	int inventorypointer = player.CheckInventory(1);
-	if (inventorypointer < 0)
-	{
-		return 1;
-	}
-	return 2;
 }
 
 Model::Model()
@@ -277,3 +393,4 @@ Model::Model()
 Model::~Model()
 {
 }
+
