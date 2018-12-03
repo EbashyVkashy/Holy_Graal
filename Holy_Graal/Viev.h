@@ -5,7 +5,7 @@
 class Viev
 {
 public:
-	void Wellcome();
+	void Welcome();
 	void Rules();
 	void AskWidth();
 	void AskHeight();
@@ -21,6 +21,9 @@ public:
 	void GotGraal();
 	void YouDied();
 	void YouWon();
+	void CantSee();
+	void YouCanOnlyMove();
+	
 	void WritePosition(const Model &);
 	Viev();
 	~Viev();

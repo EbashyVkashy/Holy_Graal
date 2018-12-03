@@ -12,6 +12,10 @@ void Item::CreateItem(int id)
 		break;
 	case 2:
 		name = "chest";
+		break;
+	case 3:
+		name = "torch";
+		break;
 	default:
 		break;
 	}

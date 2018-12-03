@@ -2,9 +2,9 @@
 #include "Model.h"
 #include <iostream>
 
-void Viev::Wellcome()
+void Viev::Welcome()
 {
-	std::cout << "Wellcome travaler! You are about to enter great Labyrinth of the Holy Graal!" << std::endl;
+	std::cout << "Welcome traveler! You are about to enter great Labyrinth of the Holy Graal!" << std::endl;
 }
 
 void Viev::Rules()
@@ -84,6 +84,16 @@ void Viev::YouDied()
 void Viev::YouWon()
 {
 	std::cout << "Congratulation you won!" << std::endl;
+}
+
+void Viev::CantSee()
+{
+	std::cout << "Can`t see anything in this dark place!";
+}
+
+void Viev::YouCanOnlyMove()
+{
+	std::cout << "You can only move!" << std::endl;
 }
 
 void Viev::WritePosition(const Model &mod)

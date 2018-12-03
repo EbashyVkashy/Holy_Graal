@@ -7,7 +7,7 @@ void Player::PlacePlayer(int x, int y, int maxy)
 	posx = x;
 	posy = y;
 	pospoint = x * maxy + y;
-	life = (x + y) * 2;
+	life = (x + y) * 5;
 }
 
 void Player::AddToInventory(Item & toinventory)

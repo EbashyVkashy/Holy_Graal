@@ -2,10 +2,11 @@
 
 void Room::RoomInit()
 {
-for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		walls[i] = 0;
+			walls[i] = 0;
 	}
+	light = 1;
 }
 
 void Room::AddToStash(Item &item)

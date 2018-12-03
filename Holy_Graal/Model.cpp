@@ -22,6 +22,7 @@ void Model::GenerateLevel()
 {
 	Item additem;
 	labyrinth.LabCreation(labyrinth.width, labyrinth.height);				//initializing labyrthing
+	
 	labyrinth.enterx = std::rand() % labyrinth.width;		//adding core obj (enter chest key)
 	labyrinth.entery = std::rand() % labyrinth.height;
 	do
@@ -96,9 +97,27 @@ void Model::GenerateLevel()
 			labyrinth.OpenSide(labyrinth.chestx, i, 1);
 		}
 	}
+	
 	for (int i = 0; i < (labyrinth.width * labyrinth.height); i++) //add random doors
 	{
 		labyrinth.OpenSide(rand() % labyrinth.width, rand() % labyrinth.height, rand() % 4);
+	}
+	
+	for (int i = 0; i < (labyrinth.width * labyrinth.height / 3); i++)  //add dark rooms
+	{
+		labyrinth.rooms[rand() % (labyrinth.width * labyrinth.height)].light = 0;
+	}
+	for (int i = 0; i < (labyrinth.width * labyrinth.height / 3); i++)//add torches
+	{
+		int tempx = rand() % labyrinth.width;
+		int tempy = rand() % labyrinth.height;
+		Item tempitem;
+		tempitem.CreateItem(3);
+		labyrinth.rooms[tempx * labyrinth.height + tempy].AddToStash(tempitem);
+		if (labyrinth.rooms[tempx * labyrinth.height + tempy].light == 0)
+		{
+			labyrinth.rooms[tempx * labyrinth.height + tempy].light = 2;
+		}
 	}
 }
 
@@ -163,9 +182,25 @@ int Model::GetItem(std::string itemname) //0-wrong item name, 1-no such item, 2-
 	{
 		return 1;
 	}
+	stashpointer = labyrinth.rooms[player.pospoint].CheckStash(3);
+	if (itemname == "torch" && stashpointer >= 0)
+	{
+		Item tempitem;
+		tempitem = labyrinth.rooms[player.pospoint].PassFromStash(stashpointer);
+		labyrinth.rooms[player.pospoint].RemoveFromStash(stashpointer);
+		player.AddToInventory(tempitem);
+		if (labyrinth.rooms[player.pospoint].light == 2)
+		{
+			labyrinth.rooms[player.pospoint].light = 0;
+		}
+		return 3;
+	}
+	else if (itemname == "torch" && stashpointer < 0)
+	{
+		return 1;
+	}
 	return 0;
 }
-
 int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 2-drop
 {
 	int inventorypointer = player.CheckInventory(1);
@@ -174,11 +209,27 @@ int Model::DropItem(std::string itemname) // 0-wrong item name, 1-no such item, 
 		Item tempitem;
 		tempitem =  player.PassFromInv(inventorypointer);
 		player.RemoveFromInv(inventorypointer);
-		player.AddToInventory(tempitem);
 		labyrinth.rooms[player.pospoint].AddToStash(tempitem);
 		return 2;
 	}
 	else if (itemname == "key" && inventorypointer < 0)
+	{
+		return 1;
+	}
+	inventorypointer = player.CheckInventory(3);
+	if (itemname == "torch" && inventorypointer >= 0)
+	{
+		Item tempitem;
+		tempitem = player.PassFromInv(inventorypointer);
+		player.RemoveFromInv(inventorypointer);
+		labyrinth.rooms[player.pospoint].AddToStash(tempitem);
+		if (labyrinth.rooms[player.pospoint].light == 0)
+		{
+			labyrinth.rooms[player.pospoint].light = 2;
+		}
+		return 2;
+	}
+	else if (itemname == "torch" && inventorypointer < 0)
 	{
 		return 1;
 	}
